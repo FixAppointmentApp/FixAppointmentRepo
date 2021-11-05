@@ -16,6 +16,7 @@ export default function CreateEventForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  
   const onSubmit = (data: Inputs) => console.log(data);
   console.log(errors);
 
