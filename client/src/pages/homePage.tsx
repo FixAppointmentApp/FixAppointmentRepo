@@ -3,8 +3,7 @@ import CreateEventBtn from "../component/createEventBtn";
 import NavBar from "../component/common/navBar";
 import "./style.css";
 
-
-const HomePage = () => {
+const HomePage: React.FunctionComponent = () => {
   return (
     <div>
       <NavBar />

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import NavBar from "../component/common/navBar";
+import { useHistory } from "react-router-dom";
+
 import axios from "axios";
 
 import "./style.css";
@@ -8,10 +10,11 @@ import "./style.css";
 interface FormData {
   name: string;
   email: string;
-  password: string;
+  password: string; 
 }
 
-export default function Home() {
+export default function SignUpPage() {
+  const history = useHistory();
   const {
     register,
     handleSubmit,
@@ -20,21 +23,22 @@ export default function Home() {
 
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [serverErrors, setServerErrors] = useState<Array<string>>([]);
-  
+
   const onSubmit = async (data: FormData) => {
     console.log("error", errors);
     console.log("data", data);
     setSubmitting(true);
     console.log(submitting);
     setServerErrors([]);
-    const response = await axios.post("/api/signUp", { data });
+    const response = await axios.post("http://localhost:3001/api/signUp", { name:data.name, email:data.email, password: data.password });
 
     const userData = await response.data;
+    console.log(userData);
 
     if (userData.errors) {
       setServerErrors(userData.errors);
     } else {
-      console.log("success, redirect to home page");
+        history.push(`/profilePage/${userData.id}`);
     }
     setSubmitting(false);
   };
