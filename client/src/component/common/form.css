@@ -82,7 +82,6 @@ button {
   display: block;
   appearance: none;
   border-radius: 4px;
-  width: 100%;
 }
 
 /* input[type="submit"]:hover {
@@ -118,6 +117,16 @@ input[type="submit"] {
 form {
   margin-bottom: 400px;
 }
+
+#refBtn {
+  font-size: 10px !important;
+  padding: 20px 20px;
+  margin: 0 auto !important;
+}
+
+/* #uploadImgInput {
+  display: none;
+} */
 
 /* .container {
   display: grid;
