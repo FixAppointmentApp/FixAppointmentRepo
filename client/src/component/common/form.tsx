@@ -1,5 +1,8 @@
 import "./form.css";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { useState, useRef } from "react";
+import { readBuilderProgram } from "typescript";
+import UploadImageInput from "../uploadImageInput";
 
 type Inputs = {
   title: string;
@@ -11,36 +14,93 @@ type Inputs = {
 };
 
 export default function CreateEventForm() {
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageFile, setimageFile] = useState<any>("");
+
+  const myRef = useRef<HTMLInputElement | null>(null);
+
   const {
-    register,
-    handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  
-  const onSubmit = (data: Inputs) => console.log(data);
-  console.log(errors);
+  const methods = useForm<Inputs>();
+
+  const register = methods.register;
+  const handleSubmit = methods.handleSubmit;
+
+  const handleChange = (e: any) => {
+    const file = e.target.files[0];
+    console.log(
+      "outPut ~ file: form.tsx ~ line 32 ~ handleChange ~ file",
+      file
+    );
+    setimageFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+    console.log("click change");
+  };
+
+  const handleImageRemove = () => {
+    setImageUrl("");
+    console.log("click remove");
+  };
+
+  const onSubmit = (data: Inputs) => {
+    // data.image= imageFile;
+    // console.log("outPut ~ file: form.tsx ~ line 50 ~ onSubmit ~ imageFile", imageFile)
+    console.log("data", data);
+    const formData = new FormData();
+    formData.append("image", data.image);
+    console.log("image", formData.get("image"));
+    console.log("click submit");
+    console.log(errors);
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input type="text" placeholder="Title" {...register("title", {})} />
-      <input type="text" placeholder="Hosted by" {...register("host", {})} />
-      <input
-        type="datetime-local"
-        placeholder="Date"
-        {...register("date", { required: true })}
-      />
-      <input
-        type="text"
-        placeholder="location"
-        {...register("location", { required: true })}
-      />
-      <input type="file" placeholder="image" {...register("image", {})} />
-      <textarea
-        placeholder="event content"
-        {...register("content", { required: true, maxLength: 200 })}
-      />
-
-      <input type="submit" />
-    </form>
+    <>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            type="text"
+            placeholder="Title"
+            {...register("title", { required: "required" })}
+          />
+          {errors.title && <div>{errors.title.message}</div>}
+          <input
+            type="text"
+            placeholder="Hosted by"
+            {...register("host", { required: "required" })}
+          />
+          {errors.host && <div>{errors.host.message}</div>}
+          <input
+            type="datetime-local"
+            placeholder="Date"
+            {...register("date", { required: "required" })}
+          />
+          {errors.date && <div>{errors.date.message}</div>}
+          <input
+            type="text"
+            placeholder="location"
+            {...register("location", { required: "required" })}
+          />
+          {errors.location && <div>{errors.location.message}</div>}
+          <UploadImageInput
+            imageUrl={imageUrl}
+            onChange={handleChange}
+            // onRemove={handleImageRemove}
+          />
+          <textarea
+            placeholder="event details"
+            {...register("content", { required: "required" })}
+          />
+          {errors.content && <div>{errors.content.message}</div>}
+          <input type="submit" />
+        </form>
+      </FormProvider>
+    </>
   );
 }

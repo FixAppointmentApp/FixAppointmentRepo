@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import NavBar from "../component/common/navBar";
 import { useHistory } from "react-router-dom";
@@ -6,12 +6,11 @@ import axios from "axios";
 import "./style.css";
 
 interface FormData {
-  name: string;
   email: string;
-  password: string; 
+  password: string;
 }
 
-export default function SignUpPage() {
+export default function LogInPage() {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [serverErrors, setServerErrors] = useState<Array<string>>([]);
   const history = useHistory();
@@ -20,23 +19,27 @@ export default function SignUpPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-  
 
   const onSubmit = async (data: FormData) => {
     console.log("error", errors);
     console.log("data", data);
     setSubmitting(true);
-    console.log(submitting);
     setServerErrors([]);
-    const response = await axios.post("http://localhost:3001/api/signUp", { name:data.name, email:data.email, password: data.password });
+    const response = await axios.post("http://localhost:3001/api/logIn", {
+      email: data.email,
+      password: data.password,
+    });
     const userData = await response.data;
     console.log(userData);
     if (userData.errors) {
       setServerErrors(userData.errors);
     } else {
-        history.push(`/profilePage/${userData.id}`);
+      history.push(`/profilePage/${userData.id}`);
     }
     setSubmitting(false);
+    // catch(error){
+    //   console.log(error)
+    // }
   };
 
   return (
@@ -50,16 +53,6 @@ export default function SignUpPage() {
             ))}
           </ul>
         )}
-
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            {...register("name", { required: "required" })}
-          />
-          {errors.name && <div>{errors.name.message}</div>}
-        </div>
 
         <div>
           <label htmlFor="email">Email</label>
@@ -88,7 +81,7 @@ export default function SignUpPage() {
         </div>
         <div>
           <button type="submit" disabled={submitting}>
-            Register
+            Log in
           </button>
         </div>
       </form>

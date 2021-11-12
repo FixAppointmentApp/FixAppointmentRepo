@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import LogOut from "./logOut";
 import "./navBar.css";
 
 export default function NavBar() {
@@ -12,8 +13,13 @@ export default function NavBar() {
         </Link>
         <ul className="navFlex">
           <li>
-            <Link className="link" to="">
+            <Link className="link" to="/logInPage">
               Sign in
+            </Link>
+          </li>
+          <li>
+            <Link className="link" to="/">
+              <LogOut />
             </Link>
           </li>
           <li>

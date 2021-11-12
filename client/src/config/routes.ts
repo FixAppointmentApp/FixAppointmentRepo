@@ -1,6 +1,7 @@
 import IRoute from "../interfaces/route";
 import CreateEvent from "../pages/createEvent";
 import HomePage from "../pages/homePage";
+import LogInPage from "../pages/logInPage";
 import profilePage from "../pages/profilePage";
 import signUpPage from "../pages/signUpPage";
 
@@ -21,6 +22,11 @@ const routes: IRoute[] = [
     path: "/signUpPage",
     name: "Sign up Page",
     component: signUpPage,
+    exact: true,
+  }, {
+    path: "/logInPage",
+    name: "log in Page",
+    component: LogInPage,
     exact: true,
   },
   {
