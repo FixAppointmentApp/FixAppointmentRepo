@@ -48,7 +48,7 @@ app.post('/api/events', /* upload.single('image'), 1*/ (req, res) => {
         }
     });
 });
-//saving register data
+//signUp route
 app.post('/api/signUp', (req, res) => {
     const { name, email, password } = req.body;
     console.log(req.body);
@@ -66,7 +66,41 @@ app.post('/api/signUp', (req, res) => {
             });
         }
     });
-    //
+});
+//login route
+app.post("/api/logIn", (req, res) => {
+    //const username: string = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    //for hash func'n we ll delete password from db.query & put it on if function
+    db.query("SELECT * FROM Register WHERE email = ?;", 
+    //[email, password], replaced with z below after hash function
+    email, (err, result) => {
+        if (err) {
+            res.send({ err: err });
+        }
+        else {
+            if (result.length > 0) {
+                //res.send(result) replace with the below to compare incripted pass
+                bcrypt.compare(password, result[0].password, (error, answer) => {
+                    if (answer) {
+                        //after installing session & cookies we will do the below function
+                        req.body.user = result;
+                        //req.session.user = result;
+                        //console.log(req.session.user)
+                        res.send(result); //password & email address correct 
+                    }
+                    else {
+                        res.send({ message: 'wrong pass/email combination!' }); //wrong pass
+                    }
+                });
+            }
+            else {
+                res.send({ message: 'User does not exist!' }); //wrong email address
+            }
+        }
+        //console.log("User does not exist")
+    });
 });
 //get route
 app.get('/', (req, res) => {

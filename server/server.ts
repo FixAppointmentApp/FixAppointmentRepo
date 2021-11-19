@@ -55,7 +55,7 @@ db.query("INSERT INTO Events (title,host,date,location,image,content )VALUES(?,?
 }) 
 
 
-//saving register data
+//signUp route
 app.post('/api/signUp', (req:Request, res:Response):void => {
   const {name, email, password} = req.body
   console.log(req.body)
@@ -74,13 +74,45 @@ bcrypt.hash(password, saltRounds, (err: any, hash:any)=>{
      //res.redirect('/login')
     }
   })
-
 }
-
 })
-//
+})  
 
-  })  
+//login route
+app.post("/api/logIn", (req:Request, res:Response):void=>{
+ //const username: string = req.body.username;
+ const email: string = req.body.email;
+ const password : string = req.body.password
+
+//for hash func'n we ll delete password from db.query & put it on if function
+   db.query(
+     "SELECT * FROM Register WHERE email = ?;",
+     //[email, password], replaced with z below after hash function
+     email,
+     (err, result) => {
+       if (err) {
+         res.send({err: err})
+       }  else {
+             if(result.length > 0) {
+               //res.send(result) replace with the below to compare incripted pass
+               bcrypt.compare(password, result[0].password, (error:any, answer:any)=>{
+                 if(answer){
+//after installing session & cookies we will do the below function
+                   req.body.user = result;
+                   //req.session.user = result;
+                   //console.log(req.session.user)
+                   res.send(result)
+                 } else {
+                   res.send({message: 'wrong pass/email combination!'})//wrong pass
+                 }
+               })
+             } else{
+               res.send({message: 'User does not exist!'})//wrong email address
+             }
+       }
+     }
+   )
+})
 
 //get route
 app.get('/', (req:Request, res:Response): void =>{
