@@ -13,8 +13,8 @@ app.use(Cors());
 const db = mysql_1.default.createConnection({
     user: "root",
     host: "localhost",
-    password: "ashuMysql@21",
-    database: "Project"
+    password: process.env.DATABASEPASSWORD,
+    database: process.env.DATABASENAME
 });
 //saving data to db
 app.post('/events', (req, res) => {
