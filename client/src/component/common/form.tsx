@@ -17,15 +17,15 @@ export default function CreateEventForm() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageFile, setimageFile] = useState<any>("");
 
-  const myRef = useRef<HTMLInputElement | null>(null);
+  // const myRef = useRef<HTMLInputElement | null>(null);
 
-  const {
-    formState: { errors },
-  } = useForm<Inputs>();
   const methods = useForm<Inputs>();
 
-  const register = methods.register;
-  const handleSubmit = methods.handleSubmit;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
   const handleChange = (e: any) => {
     const file = e.target.files[0];
@@ -33,7 +33,7 @@ export default function CreateEventForm() {
       "outPut ~ file: form.tsx ~ line 32 ~ handleChange ~ file",
       file
     );
-    setimageFile(file);
+    setimageFile(e.target.files);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -44,19 +44,17 @@ export default function CreateEventForm() {
     console.log("click change");
   };
 
-  const handleImageRemove = () => {
-    setImageUrl("");
-    console.log("click remove");
-  };
+  // const handleImageRemove = () => {
+  //   setImageUrl("");
+  //   console.log("click remove");
+  // };
 
   const onSubmit = (data: Inputs) => {
-    // data.image= imageFile;
-    // console.log("outPut ~ file: form.tsx ~ line 50 ~ onSubmit ~ imageFile", imageFile)
+    data.image = imageFile;
     console.log("data", data);
-    const formData = new FormData();
-    formData.append("image", data.image);
-    console.log("image", formData.get("image"));
-    console.log("click submit");
+    // const formData = new FormData();
+    // formData.append("image", data.image);
+    // console.log("image", formData.get("image"));
     console.log(errors);
   };
 

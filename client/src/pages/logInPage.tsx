@@ -25,7 +25,7 @@ export default function LogInPage() {
     console.log("data", data);
     setSubmitting(true);
     setServerErrors([]);
-    const response = await axios.post("http://localhost:3001/api/logIn", {
+    const response = await axios.post("http://localhost:3001/logIn", {
       email: data.email,
       password: data.password,
     });

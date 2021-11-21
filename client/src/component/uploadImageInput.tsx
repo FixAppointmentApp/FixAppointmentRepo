@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 
 interface InputProps {
   imageUrl: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   //   onRemove: () => void;
 }
 
@@ -15,7 +15,7 @@ const UploadImageInput: React.FunctionComponent<InputProps> = (
   const { ref } = { ...methods.register("image") };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault();
+    e.preventDefault();
     if (myRef.current) {
       myRef.current.click();
     }
