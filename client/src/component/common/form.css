@@ -124,9 +124,9 @@ form {
   margin: 0 auto !important;
 }
 
-/* #uploadImgInput {
+#uploadImgInput {
   display: none;
-} */
+}
 
 /* .container {
   display: grid;

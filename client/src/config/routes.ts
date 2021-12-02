@@ -4,6 +4,7 @@ import HomePage from "../pages/homePage";
 import LogInPage from "../pages/logInPage";
 import profilePage from "../pages/profilePage";
 import signUpPage from "../pages/signUpPage";
+import eventPreviewPage from "../pages/eventPreviewPage";
 
 const routes: IRoute[] = [
   {
@@ -23,7 +24,8 @@ const routes: IRoute[] = [
     name: "Sign up Page",
     component: signUpPage,
     exact: true,
-  }, {
+  },
+  {
     path: "/logInPage",
     name: "log in Page",
     component: LogInPage,
@@ -33,6 +35,12 @@ const routes: IRoute[] = [
     path: "/profilePage/:id",
     name: "Profile Page",
     component: profilePage,
+    exact: true,
+  },
+  {
+    path: "/eventPreviewPage",
+    name: "event preview Page",
+    component: eventPreviewPage,
     exact: true,
   },
   // {
