@@ -5,25 +5,18 @@ const express = require('express');
 import {Request, Response} from 'express';
 import mySql from 'mysql';
 const Cors = require('cors');
-//const multer = require('multer');1
 
 //to hash password the below 2 lines
 const bcrypt = require('bcrypt');
 const saltRounds = 10; 
 const app = express();
 
+//
+const userUpload = require("../routes/index");
+
 app.use(express.json());
 app.use(Cors());
 
-//upload multer
-//const upload = multer({storage:multer.memoryStorage()});1
-//corrected
-//var upload = multer({ dest: 'uploads/' })
-
-/* var upload = multer({
-  dest: 'uploads/',
-  storage: multer.memoryStorage()
-});  */
 
 //create db & link datas to db
 const db = mySql.createConnection({
@@ -31,6 +24,10 @@ const db = mySql.createConnection({
   host: "localhost",
   password: process.env.DATABASEPASSWORD,
   database: process.env.DATABASENAME
+})
+db.connect(function(error){
+  if(error)console.log('error')
+  else console.log('mySql db is successfully connected!')
 })
 
 //saving event's data
@@ -113,11 +110,28 @@ app.post("/api/logIn", (req:Request, res:Response):void=>{
      }
    )
 })
+//filter result with id
+//show all datas for db
+app.get("/api/showData/:id", (req: Request, res: Response): void => {
+  const id = req.params.id;
+  db.query("SELECT * FROM Project.Events WHERE id=?",id, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(result);
+    }
+  });
+});
+
 
 //get route
 app.get('/', (req:Request, res:Response): void =>{
   res.json({message: 'Hello There!'})
 }) 
+//to upload images: localhost:3001/user/upload
+//app.use('/api', userUpload);
+app.use("/user", userUpload);
+
 
 const PORT = process.env.PORT || 3001;
 app.listen('3001', ():void=>{

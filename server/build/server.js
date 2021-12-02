@@ -8,27 +8,26 @@ dotenv.config();
 const express = require('express');
 const mysql_1 = __importDefault(require("mysql"));
 const Cors = require('cors');
-//const multer = require('multer');1
 //to hash password the below 2 lines
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const app = express();
+//
+const userUpload = require("../routes/index");
 app.use(express.json());
 app.use(Cors());
-//upload multer
-//const upload = multer({storage:multer.memoryStorage()});1
-//corrected
-//var upload = multer({ dest: 'uploads/' })
-/* var upload = multer({
-  dest: 'uploads/',
-  storage: multer.memoryStorage()
-});  */
 //create db & link datas to db
 const db = mysql_1.default.createConnection({
     user: "root",
     host: "localhost",
     password: process.env.DATABASEPASSWORD,
     database: process.env.DATABASENAME
+});
+db.connect(function (error) {
+    if (error)
+        console.log('error');
+    else
+        console.log('mySql db is successfully connected!');
 });
 //saving event's data
 app.post('/api/events', /* upload.single('image'), 1*/ (req, res) => {
@@ -88,7 +87,7 @@ app.post("/api/logIn", (req, res) => {
                         req.body.user = result;
                         //req.session.user = result;
                         //console.log(req.session.user)
-                        res.send(result); //password & email address correct 
+                        res.send(result);
                     }
                     else {
                         res.send({ message: 'wrong pass/email combination!' }); //wrong pass
@@ -99,13 +98,28 @@ app.post("/api/logIn", (req, res) => {
                 res.send({ message: 'User does not exist!' }); //wrong email address
             }
         }
-        //console.log("User does not exist")
+    });
+});
+//filter result with id
+//show all datas for db
+app.get("/api/showData/:id", (req, res) => {
+    const id = req.params.id;
+    db.query("SELECT * FROM Project.Events WHERE id=?", id, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.json(result);
+        }
     });
 });
 //get route
 app.get('/', (req, res) => {
     res.json({ message: 'Hello There!' });
 });
+//to upload images: localhost:3001/user/upload
+//app.use('/api', userUpload);
+app.use("/user", userUpload);
 const PORT = process.env.PORT || 3001;
 app.listen('3001', () => {
     console.log(`server is running on port ${PORT}`);
