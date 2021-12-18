@@ -101,7 +101,6 @@ app.post("/api/logIn", (req, res) => {
     });
 });
 //filter result with id
-//show all datas for db
 app.get("/api/showData/:id", (req, res) => {
     const id = req.params.id;
     db.query("SELECT * FROM Project.Events WHERE id=?", id, (err, result) => {
@@ -117,9 +116,9 @@ app.get("/api/showData/:id", (req, res) => {
 app.get('/', (req, res) => {
     res.json({ message: 'Hello There!' });
 });
-//to upload images: localhost:3001/user/upload
-//app.use('/api', userUpload);
-app.use("/user", userUpload);
+//to upload images: localhost:3001/api/upload
+app.use("/api", userUpload);
+app.use(express.static('public'));
 const PORT = process.env.PORT || 3001;
 app.listen('3001', () => {
     console.log(`server is running on port ${PORT}`);

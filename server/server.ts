@@ -111,7 +111,6 @@ app.post("/api/logIn", (req:Request, res:Response):void=>{
    )
 })
 //filter result with id
-//show all datas for db
 app.get("/api/showData/:id", (req: Request, res: Response): void => {
   const id = req.params.id;
   db.query("SELECT * FROM Project.Events WHERE id=?",id, (err, result) => {
@@ -128,15 +127,13 @@ app.get("/api/showData/:id", (req: Request, res: Response): void => {
 app.get('/', (req:Request, res:Response): void =>{
   res.json({message: 'Hello There!'})
 }) 
-//to upload images: localhost:3001/user/upload
-//app.use('/api', userUpload);
-app.use("/user", userUpload);
+//to upload images: localhost:3001/api/upload
+app.use("/api", userUpload);
+app.use(express.static('public'))
 
 
 const PORT = process.env.PORT || 3001;
 app.listen('3001', ():void=>{
   console.log(`server is running on port ${PORT}`)
 })
- 
-
  

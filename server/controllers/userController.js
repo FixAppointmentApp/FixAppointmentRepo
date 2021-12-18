@@ -3,7 +3,7 @@ const multer = require("multer");
 //after testing it on postman
 const multerConfig = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, "public/");
+    callback(null, "./public/");
   },
   filename: (req, file, callback) => {
     const ext = file.mimetype.split("/")[1]; //info from terminal
